@@ -51,14 +51,16 @@ int main()
 		else if(strncmp(inp, "pinfo", 5)==0)
 		{
 			char *argv[100];
-			char psCommand[100] = "ps -l -A";
+			char psCommand[100] = "ps -l -x";
 
 			char *token = strtok(inp, " ");
 			token = strtok(NULL, " ");
 
 			if(token != NULL)
 			{
-				strcat(psCommand, " ");
+				char flag[10] = " ";
+
+				strcat(psCommand, flag);
 				strcat(psCommand, token);
 			}
 
