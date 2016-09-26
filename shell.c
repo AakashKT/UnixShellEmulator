@@ -71,9 +71,7 @@ int main()
 			char *argv[100];
 
 			if(inp[strlen(inp)-1] == '&')
-			{
 				executeCommandBg(inp, argv);
-			}
 			else
 				executeCommand(inp, argv);
 		}
