@@ -92,11 +92,15 @@ void executeCommand(char inp[1000])
 
 	for(i=0;i<=totalDistinct-2;i++)
 	{
+
 		char *command = distinctCommands[i];
 		char *argvv[1000];
 
 		splitParams(command, argvv);
 		spawnCommand(in, pipeFd[1], argvv);
+
+		close(pipeFd[1]);
+
 		in = pipeFd[0];
 	}
 
