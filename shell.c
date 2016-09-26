@@ -15,13 +15,12 @@ int main()
 {
 	getcwd(homeDirectory, sizeof(homeDirectory));
 
-	char inp[1000];
-
 	printf("\n");
 	showShellPrompt("");
 
 	while(1)
 	{
+		char inp[1000];
 		gets(inp);
 
 		if(inp[0] == '\0')
@@ -64,7 +63,7 @@ int main()
 				strcat(psCommand, token);
 			}
 
-			executeCommand(psCommand, argv);
+			executeCommand(psCommand);
 		}
 		else
 		{
@@ -73,7 +72,7 @@ int main()
 			if(inp[strlen(inp)-1] == '&')
 				executeCommandBg(inp, argv);
 			else
-				executeCommand(inp, argv);
+				executeCommand(inp);
 		}
 
 	}

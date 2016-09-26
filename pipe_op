@@ -1,0 +1,20 @@
+total 400
+-rw-r--r--  1 aakashkt  staff   3738 Sep  1 22:50 20161202_assgn2.zip
+-rw-r--r--@ 1 aakashkt  staff  88133 Aug 24 22:14 Assignment2.pdf
+-rw-r--r--  1 aakashkt  staff    371 Sep  1 22:41 README.md
+-rwxr-xr-x  1 aakashkt  staff  13940 Sep  1 20:47 a.out
+-rw-r--r--  1 aakashkt  staff    392 Sep  1 22:32 changedir.c
+-rwx------  1 aakashkt  staff      0 Aug 29 02:05 child_ip
+-rwx------  1 aakashkt  staff    200 Sep 26 16:42 child_op
+-rw-r--r--  1 aakashkt  staff   1596 Sep 26 18:46 executecommand.c
+-rw-r--r--  1 aakashkt  staff   1011 Sep 26 16:42 executecommandbg.c
+-rwxr-xr-x  1 aakashkt  staff  13980 Sep 26 18:46 final
+-rw-r--r--  1 aakashkt  staff    194 Sep 26 17:56 functions.h
+-rw-r--r--  1 aakashkt  staff    178 Sep 25 16:53 makefile
+-rwx------  1 aakashkt  staff   1168 Sep 26 18:45 pipe_op
+-rw-r--r--  1 aakashkt  staff    942 Sep  1 22:49 readme.txt
+-rwxr-xr-x  1 aakashkt  staff  13940 Sep  1 22:18 shell
+-rw-r--r--  1 aakashkt  staff   1289 Sep 26 17:56 shell.c
+-rw-r--r--  1 aakashkt  staff    731 Sep  1 22:37 showshellprompt.c
+-rwxr-xr-x  1 aakashkt  staff   8660 Sep 25 18:18 test
+-rw-r--r--@ 1 aakashkt  staff    349 Sep 25 18:18 test.c

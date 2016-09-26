@@ -24,7 +24,7 @@ void executeCommandBg(char *command, char *argv[])
 		int op = open("child_op", O_WRONLY | O_CREAT, S_IRWXU);
 
 		dup2(ip, 0);
-		dup2(op, 2);
+		dup2(op, 1);
 
 		char *token = strtok(command, " ");
 
