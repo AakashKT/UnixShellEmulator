@@ -10,6 +10,8 @@
 
 #include <functions.h>
 
+list *rootNode;
+
 int check(char command[1000], char *commands[100])
 {
 	int total = 0;
@@ -134,7 +136,7 @@ void executeCommandBg(char inp[1000])
 		showShellPrompt(strcat(err, "\n"));
 	}
 	else if(forkRet == 0)
-	{
+	{		
 		int ip = open("child_ip", O_WRONLY | O_CREAT, S_IRWXU);
 		int op = open("child_op", O_WRONLY | O_CREAT, S_IRWXU);
 
@@ -152,6 +154,8 @@ void executeCommandBg(char inp[1000])
 
 		sprintf(pid, "%d", forkRet);
 		strcat(temp, pid);
+
+		addToPool(inp, forkRet);
 
 		showShellPrompt(strcat(temp, "\n"));
 	}

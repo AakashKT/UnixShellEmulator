@@ -65,6 +65,11 @@ int main()
 
 			executeCommand(psCommand);
 		}
+		else if(strncmp(inp, "listjobs", 8)==0)
+		{
+			printPoolProc();
+			showShellPrompt("");
+		}
 		else
 		{
 			if(inp[strlen(inp)-1] == '&')
@@ -72,6 +77,11 @@ int main()
 			else
 				executeCommand(inp);
 		}
+
+		int stat;
+		int retPid = waitpid(-1, &stat, WNOHANG);
+		if(WIFEXITED(stat)==1 || WIFSIGNALED(stat)==1 || WIFSTOPPED(stat)==1)
+			deleteFromPool(retPid);
 
 	}
 
