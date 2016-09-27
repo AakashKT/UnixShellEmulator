@@ -70,6 +70,15 @@ int main()
 			printPoolProc();
 			showShellPrompt("");
 		}
+		else if(strncmp(inp, "killallbg", 9)==0)
+		{
+			deleteAllFromPool();
+			showShellPrompt("");
+		}
+		else if(strncmp(inp, "quit", 4)==0)
+		{
+			_Exit(0);
+		}
 		else
 		{
 			if(inp[strlen(inp)-1] == '&')

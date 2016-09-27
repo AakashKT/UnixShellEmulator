@@ -30,7 +30,7 @@ int check(char command[1000], char *commands[100])
 	return total;
 }
 
-void spawnCommand(int in, int out, char *argv[1000])
+void spawnCommand(int *in, int *out, char *argv[1000])
 {
 	int forkRet = fork();
 
@@ -41,16 +41,16 @@ void spawnCommand(int in, int out, char *argv[1000])
 	}
 	else if(forkRet == 0)
 	{
-		dup2(in, STDIN_FILENO);
-		dup2(out, STDOUT_FILENO);
+		dup2(*in, STDIN_FILENO);
+		dup2(*out, STDOUT_FILENO);
 
 		int exeRet = execvp(argv[0], argv);
 		if(exeRet == -1)
 		{
 			char *err = strerror(errno);
 			printf("%s\n", err);
-			close(in);
-			close(out);
+			close(*in);
+			close(*out);
 
 			_Exit(0);
 		}
@@ -114,14 +114,14 @@ int splitParams(char *command, char *argv[1000], char *redirection[5])
 void setFds(int *in, int *out, int isRedirected, char *redirection[5])
 {
 	if(isRedirected == 0)
-		*in = open(redirection[0], O_RDWR | O_TRUNC, S_IRWXU);
+		*in = open(redirection[0], O_RDWR, S_IRWXU);
 	else if(isRedirected == 1)
 		*out = open(redirection[1], O_RDWR | O_TRUNC, S_IRWXU);
 	else if(isRedirected == 3)
 		*out = open(redirection[1], O_RDWR | O_APPEND, S_IRWXU);
 	else if(isRedirected == 2 || isRedirected == 4)
 	{
-		*in = open(redirection[0], O_RDWR | O_TRUNC, S_IRWXU);
+		*in = open(redirection[0], O_RDWR, S_IRWXU);
 		*out = open(redirection[1], O_RDWR | O_TRUNC, S_IRWXU);
 	}
 }
@@ -177,7 +177,6 @@ void executeCommand(char inp[1000])
 
 	for(i=0;i<=totalDistinct-2;i++)
 	{
-
 		char *command = distinctCommands[i];
 		char *argvv[1000];
 		char *redirectionInner[5];
@@ -195,7 +194,7 @@ void executeCommand(char inp[1000])
 			return;
 		}
 
-		spawnCommand(in, out, argvv);
+		spawnCommand(&in, &out, argvv);
 		close(pipeFd[1]);
 
 		in = pipeFd[0];
@@ -214,7 +213,7 @@ void executeCommand(char inp[1000])
 		return;
 	}
 
-	spawnCommand(in, out, argv);
+	spawnCommand(&in, &out, argv);
 
 	if(out != STDOUT_FILENO)
 		close(out);

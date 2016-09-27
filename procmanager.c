@@ -7,7 +7,7 @@
 #include <fcntl.h>
 #include <string.h>
 #include <stdlib.h>
-
+#include <signal.h>
 #include <functions.h>
 
 list *rootNode;
@@ -46,6 +46,22 @@ void addToPool(char inp[1000], int pid)
 		temp->pid = pid;
 		strcpy(temp->pname, inp);
 	}
+}
+
+void deleteAllFromPool()
+{
+	list *temp = rootNode;
+
+	while(temp != NULL)
+	{
+		int pid = temp->pid;
+		kill(pid, SIGKILL);
+		deleteFromPool(pid);
+		
+		temp = temp->next;
+	}
+
+	return;
 }
 
 void deleteFromPool(int pid)

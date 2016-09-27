@@ -17,3 +17,4 @@ void executeCommandBg(char inp[1000]);
 void addToPool(char inp[1000], int pid);
 void printPoolProc();
 void deleteFromPool(int pid);
+void deleteAllFromPool();
