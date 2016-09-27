@@ -62,30 +62,52 @@ void spawnCommand(int in, int out, char *argv[1000])
 	return;
 }
 
-void splitParams(char *command, char *argv[1000])
+int splitParams(char *command, char *argv[1000], char *redirection[5])
 {
 	char *token = strtok(command, " ");
 	int j=0;
+	int isRedirected = -1;
 	while(token != NULL)
 	{
-		argv[j] = (char*) malloc(100*sizeof(char));
-		strcpy(argv[j], token);
+		if(strcmp(token, "<")==0)
+		{
+			token = strtok(NULL, " ");
+			redirection[0] = (char*) malloc(100*sizeof(char));
+			strcpy(redirection[0], token);
+
+			isRedirected++;
+		}
+		else if(strcmp(token, ">")==0)
+		{
+			token = strtok(NULL, " ");
+			redirection[1] = (char*) malloc(100*sizeof(char));
+			strcpy(redirection[1], token);
+
+			isRedirected += 2;
+		}
+		else
+		{
+			argv[j] = (char*) malloc(100*sizeof(char));
+			strcpy(argv[j], token);
+			j++;
+		}
 		token = strtok(NULL, " ");
-		j++;
 	}
 	argv[j] = NULL;
 
-	return;
+	return isRedirected;
 }
 
 void executeCommand(char inp[1000])
 {
 	char *distinctCommands[100];
 	char *argv[1000];
+	char *redirection[5];
 	int totalDistinct = check(inp, distinctCommands);
 
 	int pipeFd[2];
 	int in = STDIN_FILENO;
+	int out = STDOUT_FILENO;
 	int i;
 
 	pipe(pipeFd);
@@ -95,17 +117,57 @@ void executeCommand(char inp[1000])
 
 		char *command = distinctCommands[i];
 		char *argvv[1000];
+		char *redirectionInner[5];
 
-		splitParams(command, argvv);
-		spawnCommand(in, pipeFd[1], argvv);
+		out = pipeFd[1];
+
+		int isRedirected = splitParams(command, argvv, redirectionInner);
+
+		if(isRedirected == 0)
+			in = open(redirectionInner[0], O_WRONLY | O_CREAT, S_IRWXU);
+		else if(isRedirected == 1)
+			out = open(redirectionInner[1], O_WRONLY | O_CREAT, S_IRWXU);
+		else 
+		{
+			in = open(redirectionInner[0], O_WRONLY | O_CREAT, S_IRWXU);
+			out = open(redirectionInner[1], O_WRONLY | O_CREAT, S_IRWXU);
+		}
+
+		spawnCommand(in, out, argvv);
 
 		close(pipeFd[1]);
 
 		in = pipeFd[0];
 	}
 
-	splitParams(distinctCommands[totalDistinct-1], argv);
-	spawnCommand(in, STDOUT_FILENO, argv);
+	out = STDOUT_FILENO;
+
+	int isRedirected = splitParams(distinctCommands[totalDistinct-1], argv, redirection);
+	
+	if(isRedirected == 0)
+		in = open(redirection[0], O_RDWR, S_IRWXU);
+	else if(isRedirected == 1)
+		out = open(redirection[1], O_RDWR, S_IRWXU);
+	else if(isRedirected == 2)
+	{
+		in = open(redirection[0], O_RDWR, S_IRWXU);
+		out = open(redirection[1], O_RDWR, S_IRWXU);
+	}
+
+	if(in == -1 || out == -1)
+	{
+		printf("No such file exists\n");
+		showShellPrompt("");
+		
+		return;
+	}
+
+	spawnCommand(in, out, argv);
+
+	if(out != STDOUT_FILENO)
+		close(out);
+	if(in != STDIN_FILENO)
+		close(in);
 
 	showShellPrompt("");
 
