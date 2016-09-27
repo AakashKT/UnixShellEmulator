@@ -96,7 +96,7 @@ int splitParams(char *command, char *argv[1000], char *redirection[5])
 
 			isRedirected += 4;
 		}
-		else
+		else if(strcmp(token, "&")!=0)
 		{
 			argv[j] = (char*) malloc(100*sizeof(char));
 			strcpy(argv[j], token);
@@ -121,6 +121,39 @@ void setFds(int *in, int *out, int isRedirected, char *redirection[5])
 	{
 		*in = open(redirection[0], O_RDWR | O_TRUNC, S_IRWXU);
 		*out = open(redirection[1], O_RDWR | O_TRUNC, S_IRWXU);
+	}
+}
+
+void executeCommandBg(char inp[1000])
+{
+	int forkRet = fork();
+
+	if(forkRet == -1)
+	{
+		char *err = strerror(errno);
+		showShellPrompt(strcat(err, "\n"));
+	}
+	else if(forkRet == 0)
+	{
+		int ip = open("child_ip", O_WRONLY | O_CREAT, S_IRWXU);
+		int op = open("child_op", O_WRONLY | O_CREAT, S_IRWXU);
+
+		dup2(ip, 0);
+		dup2(op, 1);
+
+		executeCommand(inp);
+
+		_Exit(0);
+	}
+	else
+	{
+		char temp[1000] = "Process ID : ";
+		char pid[1000];
+
+		sprintf(pid, "%d", forkRet);
+		strcat(temp, pid);
+
+		showShellPrompt(strcat(temp, "\n"));
 	}
 }
 
