@@ -62,8 +62,18 @@ void deleteFromPool(int pid)
 			list *tempNext = temp->next;
 			list *tempPrev = temp->prev;
 
+			if(tempPrev == NULL && tempNext == NULL)
+			{
+				free(rootNode);
+				rootNode = NULL;
+				return;
+			}
+
 			if(tempPrev != NULL)
 				tempPrev->next = tempNext;
+			else
+				rootNode = tempNext;
+	
 			if(tempNext != NULL)
 				tempNext->prev = tempPrev;
 
